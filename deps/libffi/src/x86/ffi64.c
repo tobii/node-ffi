@@ -2,8 +2,8 @@
    ffi64.c - Copyright (c) 20011  Anthony Green
              Copyright (c) 2008, 2010  Red Hat, Inc.
              Copyright (c) 2002, 2007  Bo Thorsen <bo@suse.de>
-             
-   x86-64 Foreign Function Interface 
+
+   x86-64 Foreign Function Interface
 
    Permission is hereby granted, free of charge, to any person obtaining
    a copy of this software and associated documentation files (the
@@ -177,8 +177,10 @@ classify_argument (ffi_type *type, enum x86_64_reg_class classes[],
 	    classes[0] = classes[1] = X86_64_INTEGERSI_CLASS;
 	    return 2;
 	  }
-	else
+	else {
 	  FFI_ASSERT (0);
+  }
+    break;
       }
     case FFI_TYPE_FLOAT:
       if (!(byte_offset % 8))
@@ -197,7 +199,7 @@ classify_argument (ffi_type *type, enum x86_64_reg_class classes[],
       {
 	const int UNITS_PER_WORD = 8;
 	int words = (type->size + UNITS_PER_WORD - 1) / UNITS_PER_WORD;
-	ffi_type **ptr; 
+	ffi_type **ptr;
 	int i;
 	enum x86_64_reg_class subclasses[MAX_CLASSES];
 
@@ -576,7 +578,7 @@ ffi_closure_unix64_inner(ffi_closure *closure, void *rvalue,
 
   avn = cif->nargs;
   arg_types = cif->arg_types;
-  
+
   for (i = 0; i < avn; ++i)
     {
       enum x86_64_reg_class classes[MAX_CLASSES];

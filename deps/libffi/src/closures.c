@@ -46,7 +46,7 @@
 #  define HAVE_MNTENT 1
 # endif
 # if defined(X86_WIN32) || defined(X86_WIN64) || defined(__OS2__)
-/* Windows systems may have Data Execution Protection (DEP) enabled, 
+/* Windows systems may have Data Execution Protection (DEP) enabled,
    which requires the use of VirtualMalloc/VirtualFree to alloc/free
    executable memory. */
 #  define FFI_MMAP_EXEC_WRIT 1
@@ -178,6 +178,8 @@ selinux_enabled_check (void)
 
 /* Cygwin is Linux-like, but not quite that Linux-like.  */
 #define is_selinux_enabled() 0
+
+#define _unused(x) ((void)(x))
 
 #endif /* !defined(X86_WIN32) && !defined(X86_WIN64) */
 
@@ -418,7 +420,7 @@ dlmmap_locked (void *start, size_t length, int prot, int flags, off_t offset)
 	  close (execfd);
 	  goto retry_open;
 	}
-      ftruncate (execfd, offset);
+      if(ftruncate (execfd, offset)) {};
       return MFAIL;
     }
   else if (!offset
@@ -430,7 +432,7 @@ dlmmap_locked (void *start, size_t length, int prot, int flags, off_t offset)
   if (start == MFAIL)
     {
       munmap (ptr, length);
-      ftruncate (execfd, offset);
+      if(ftruncate (execfd, offset)) {};
       return start;
     }
 
