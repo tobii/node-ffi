@@ -114,7 +114,10 @@ NAN_METHOD(CallbackInfo::Callback) {
 
   // Args: cif pointer, JS function
   // TODO: Check args
-  ffi_cif *cif = (ffi_cif *)Buffer::Data(info[0]->ToObject());
+  Isolate* isolate = info.GetIsolate();
+  Local<Context> context = isolate->GetCurrentContext();
+
+  ffi_cif *cif = (ffi_cif *)Buffer::Data(info[0]->ToObject(context).ToLocalChecked());
 
   size_t resultSize = Nan::To<int32_t>(info[1]).FromJust();
   int argc = Nan::To<int>(info[2]).FromJust();
