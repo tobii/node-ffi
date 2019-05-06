@@ -26,13 +26,13 @@
     "bindings": "1.4.0",
     "debug": "4.1.1",
     "nan": "2.12.1",
-    "ref": "TooTallNate/ref#pull/110/head",
-    "ref-struct": "pedrotari7/ref-struct"
+    "ref": "tobiipro/ref",
+    "ref-struct": "tobiipro/ref-struct"
   },
   "devDependencies": {
     "fs-extra": "7.0.1",
     "mocha": "5.0.0",
-    "ref-array": "pedrotari7/ref-array"
+    "ref-array": "tobiipro/ref-array"
   },
   "scripts": {
     "test": "node-gyp rebuild --directory test && mocha -gc --reporter spec"
