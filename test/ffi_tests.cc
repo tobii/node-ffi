@@ -291,7 +291,7 @@ inline Local<Value> WrapPointer(char *ptr) {
   return WrapPointer(ptr, 0);
 }
 
-void Initialize(Handle<Object> target) {
+void Initialize(v8::Local<Object> target) {
   Nan::HandleScope();
 
 #if WIN32
@@ -311,18 +311,20 @@ void Initialize(Handle<Object> target) {
   // sprintf pointer; used in the varadic tests
   target->Set(Nan::New<String>("sprintf").ToLocalChecked(), WrapPointer((char *)sprintf));
 
+  auto context = v8::Isolate::GetCurrent()->GetCurrentContext();
+
   // hard-coded `strtoul` binding, for the benchmarks
   Nan::Set(target, Nan::New<String>("strtoul").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(Strtoul)->GetFunction());
+    Nan::New<FunctionTemplate>(Strtoul)->GetFunction(context).ToLocalChecked());
 
   Nan::Set(target, Nan::New<String>("set_cb").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(SetCb)->GetFunction());
+    Nan::New<FunctionTemplate>(SetCb)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("call_cb").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(CallCb)->GetFunction());
+    Nan::New<FunctionTemplate>(CallCb)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("call_cb_from_thread").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(CallCbFromThread)->GetFunction());
+    Nan::New<FunctionTemplate>(CallCbFromThread)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("call_cb_async").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(CallCbAsync)->GetFunction());
+    Nan::New<FunctionTemplate>(CallCbAsync)->GetFunction(context).ToLocalChecked());
 
   // also need to test these custom functions
   target->Set(Nan::New<String>("double_box").ToLocalChecked(), WrapPointer((char *)double_box));

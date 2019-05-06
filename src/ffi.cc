@@ -44,15 +44,17 @@ NAN_MODULE_INIT(FFI::InitializeBindings) {
   Nan::Set(target, Nan::New<String>("version").ToLocalChecked(),
     Nan::New<String>(PACKAGE_VERSION).ToLocalChecked());
 
+  auto context = v8::Isolate::GetCurrent()->GetCurrentContext();
+
   // main function exports
   Nan::Set(target, Nan::New<String>("ffi_prep_cif").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(FFIPrepCif)->GetFunction());
+    Nan::New<FunctionTemplate>(FFIPrepCif)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("ffi_prep_cif_var").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(FFIPrepCifVar)->GetFunction());
+    Nan::New<FunctionTemplate>(FFIPrepCifVar)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("ffi_call").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(FFICall)->GetFunction());
+    Nan::New<FunctionTemplate>(FFICall)->GetFunction(context).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("ffi_call_async").ToLocalChecked(),
-    Nan::New<FunctionTemplate>(FFICallAsync)->GetFunction());
+    Nan::New<FunctionTemplate>(FFICallAsync)->GetFunction(context).ToLocalChecked());
 
   // `ffi_status` enum values
   SET_ENUM_VALUE(FFI_OK);
@@ -181,7 +183,7 @@ NAN_METHOD(FFI::FFIPrepCif) {
     return THROW_ERROR_EXCEPTION("ffi_prep_cif() requires 5 arguments!");
   }
 
-  Handle<Value> cif_buf = info[0];
+  Local<Value> cif_buf = info[0];
   if (!Buffer::HasInstance(cif_buf)) {
     return THROW_ERROR_EXCEPTION("prepCif(): Buffer required as first arg");
   }
@@ -227,7 +229,7 @@ NAN_METHOD(FFI::FFIPrepCifVar) {
     return THROW_ERROR_EXCEPTION("ffi_prep_cif() requires 5 arguments!");
   }
 
-  Handle<Value> cif_buf = info[0];
+  Local<Value> cif_buf = info[0];
   if (!Buffer::HasInstance(cif_buf)) {
     return THROW_ERROR_EXCEPTION("prepCifVar(): Buffer required as first arg");
   }

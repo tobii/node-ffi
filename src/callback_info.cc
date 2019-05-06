@@ -115,7 +115,7 @@ NAN_METHOD(CallbackInfo::Callback) {
   // Args: cif pointer, JS function
   // TODO: Check args
   Isolate* isolate = info.GetIsolate();
-  Local<Context> context = isolate->GetCurrentContext();
+  auto context = v8::Isolate::GetCurrent()->GetCurrentContext();
 
   ffi_cif *cif = (ffi_cif *)Buffer::Data(info[0]->ToObject(context).ToLocalChecked());
 
@@ -215,11 +215,12 @@ void CallbackInfo::Invoke(ffi_cif *cif, void *retval, void **parameters, void *u
  * Init stuff.
  */
 
-void CallbackInfo::Initialize(Handle<Object> target) {
+void CallbackInfo::Initialize(v8::Local<Object> target) {
   Nan::HandleScope scope;
 
+  auto context = v8::Isolate::GetCurrent()->GetCurrentContext();
 	Nan::Set(target, Nan::New<String>("Callback").ToLocalChecked(),
-		Nan::New<FunctionTemplate>(Callback)->GetFunction());
+		Nan::New<FunctionTemplate>(Callback)->GetFunction(context).ToLocalChecked());
 
   // initialize our threaded invokation stuff
 #ifdef WIN32
